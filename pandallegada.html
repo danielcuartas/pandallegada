@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PandaLlegada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-deep: #1E2444;
+    --sky-mid: #3C3E72;
+    --sky-horizon: #F0A85B;
+    --sky-horizon-soft: #F7C98A;
+    --cream: #FBF3E7;
+    --lavender: #B9BAD9;
+    --coral: #F0895B;
+    --snow: #EAF2F7;
+    --ink: #171A2B;
+    --line: rgba(251,243,231,0.18);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background: var(--sky-deep);
+    color: var(--cream);
+    font-family: 'Manrope', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body{
+    background:
+      radial-gradient(ellipse 120% 60% at 50% 0%, rgba(255,255,255,0.05), transparent 60%),
+      linear-gradient(180deg, var(--sky-deep) 0%, var(--sky-mid) 55%, var(--sky-horizon) 100%);
+    min-height: 100vh;
+  }
+
+  .wrap{
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+
+  header{
+    text-align:center;
+    margin-bottom: 48px;
+  }
+
+  .brand{
+    font-family:'Fraunces', serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    letter-spacing: 0.01em;
+    color: var(--cream);
+    margin: 0 0 6px;
+  }
+  .brand span{ color: var(--coral); }
+
+  .subhead{
+    color: var(--lavender);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  /* ---------- Countdown ---------- */
+  .countdown-section{
+    text-align:center;
+    margin: 40px 0 56px;
+  }
+
+  .countdown-label{
+    font-size: 1rem;
+    color: var(--lavender);
+    margin: 0 0 18px;
+  }
+
+  .countdown{
+    display:flex;
+    justify-content:center;
+    gap: clamp(10px, 3vw, 28px);
+    flex-wrap: wrap;
+  }
+
+  .unit{
+    min-width: 76px;
+  }
+
+  .unit .num{
+    font-family:'Fraunces', serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-size: clamp(2.4rem, 9vw, 4.4rem);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--cream);
+  }
+
+  .unit .lbl{
+    font-size: 0.72rem;
+    color: var(--lavender);
+    margin-top: 6px;
+    text-transform: lowercase;
+  }
+
+  .arrived-msg{
+    display:none;
+    font-family:'Fraunces', serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    color: var(--coral);
+  }
+
+  .phase-note{
+    margin-top: 18px;
+    font-size: 0.9rem;
+    color: var(--lavender);
+  }
+
+  /* ---------- Clocks ---------- */
+  .clocks{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 0 0 56px;
+  }
+
+  .clock-card{
+    background: rgba(251,243,231,0.06);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 20px 18px;
+    text-align:center;
+  }
+
+  .clock-city{
+    font-size: 0.8rem;
+    color: var(--lavender);
+    margin: 0 0 8px;
+  }
+
+  .clock-time{
+    font-family:'Fraunces', serif;
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-variant-numeric: tabular-nums;
+    margin: 0;
+  }
+
+  .clock-date{
+    font-size: 0.72rem;
+    color: var(--lavender);
+    margin-top: 4px;
+  }
+
+  /* ---------- Flight scene ---------- */
+  .scene-wrap{
+    background: rgba(23,26,43,0.35);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 28px 20px 20px;
+    margin-bottom: 40px;
+  }
+
+  .scene-title{
+    text-align:center;
+    font-size: 0.8rem;
+    color: var(--lavender);
+    margin: 0 0 14px;
+  }
+
+  svg.scene{
+    width: 100%;
+    height: auto;
+    display:block;
+  }
+
+  .legs{
+    margin-top: 16px;
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+  }
+
+  .leg{
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.85rem;
+    color: var(--lavender);
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .leg:last-of-type{ border-bottom: none; padding-bottom: 0; }
+
+  .leg strong{ color: var(--cream); font-weight: 600; }
+  .leg .flightno{ color: var(--coral); font-weight: 600; }
+
+  .layover{
+    text-align:center;
+    font-size: 0.75rem;
+    color: var(--lavender);
+    opacity: 0.8;
+  }
+
+  .live-links{
+    display:flex;
+    justify-content:center;
+    gap: 12px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
+  .live-links a{
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 8px 14px;
+    transition: border-color 0.2s ease;
+  }
+  .live-links a:hover{ border-color: var(--coral); }
+  .live-links a::before{ content: "↗ "; opacity: 0.6; }
+
+
+
+  footer{
+    text-align:center;
+    color: var(--lavender);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+  footer .heart{ color: var(--coral); }
+
+  @media (max-width: 520px){
+    .clocks{ grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="brand">Panda<span>Llegada</span></p>
+    <p class="subhead">Denver, Colorado → Madrid, España</p>
+  </header>
+
+  <section class="countdown-section">
+    <p class="countdown-label" id="countdownLabel"></p>
+    <div class="countdown" id="countdown">
+      <div class="unit"><div class="num" id="dd">00</div><div class="lbl">días</div></div>
+      <div class="unit"><div class="num" id="hh">00</div><div class="lbl">horas</div></div>
+      <div class="unit"><div class="num" id="mm">00</div><div class="lbl">min</div></div>
+      <div class="unit"><div class="num" id="ss">00</div><div class="lbl">seg</div></div>
+    </div>
+    <p class="arrived-msg" id="arrivedMsg">Tu panda ya está en Madrid 🐼</p>
+    <p class="phase-note" id="phaseNote"></p>
+  </section>
+
+  <section class="clocks">
+    <div class="clock-card">
+      <p class="clock-city">Denver, Colorado</p>
+      <p class="clock-time" id="clockDenver">--:--:--</p>
+      <p class="clock-date" id="dateDenver">--</p>
+    </div>
+    <div class="clock-card">
+      <p class="clock-city">Madrid, España</p>
+      <p class="clock-time" id="clockMadrid">--:--:--</p>
+      <p class="clock-date" id="dateMadrid">--</p>
+    </div>
+  </section>
+
+  <section class="scene-wrap">
+    <p class="scene-title">el vuelo, en tiempo real</p>
+    <svg class="scene" viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg">
+      <!-- ground silhouettes -->
+      <path d="M0,190 L60,150 L100,175 L150,120 L190,190 Z" fill="#171A2B" opacity="0.55"></path>
+      <path d="M650,190 L670,160 L690,190 Z" fill="#171A2B" opacity="0.4"></path>
+      <path d="M700,190 L715,130 L730,190 Z" fill="#171A2B" opacity="0.5"></path>
+      <path d="M735,190 L748,155 L760,190 Z" fill="#171A2B" opacity="0.4"></path>
+
+      <!-- ground line -->
+      <line x1="0" y1="190" x2="800" y2="190" stroke="var(--line)" stroke-width="1"></line>
+
+      <!-- flight paths: leg 1 DEN-IAD, leg 2 IAD-MAD -->
+      <path id="leg1Path" d="M 100,150 Q 250,20 385,88" fill="none" stroke="var(--cream)" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.5"></path>
+      <path id="leg2Path" d="M 415,88 Q 570,20 700,150" fill="none" stroke="var(--cream)" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.5"></path>
+
+      <!-- panda icon, Denver -->
+      <g transform="translate(75,150)">
+        <!-- ears -->
+        <circle cx="-15" cy="-16" r="7.5" fill="#171A2B"></circle>
+        <circle cx="15" cy="-16" r="7.5" fill="#171A2B"></circle>
+        <!-- face -->
+        <circle cx="0" cy="0" r="21" fill="var(--cream)"></circle>
+        <!-- eye patches -->
+        <ellipse cx="-9" cy="-4" rx="7" ry="8.5" fill="#171A2B" transform="rotate(-8 -9 -4)"></ellipse>
+        <ellipse cx="9" cy="-4" rx="7" ry="8.5" fill="#171A2B" transform="rotate(8 9 -4)"></ellipse>
+        <!-- eye shine -->
+        <circle cx="-8" cy="-6" r="2.6" fill="#FFFFFF"></circle>
+        <circle cx="10" cy="-6" r="2.6" fill="#FFFFFF"></circle>
+        <circle cx="-7.5" cy="-5.3" r="1.1" fill="#171A2B"></circle>
+        <circle cx="10.5" cy="-5.3" r="1.1" fill="#171A2B"></circle>
+        <!-- blush -->
+        <ellipse cx="-13" cy="6" rx="4" ry="2.6" fill="var(--coral)" opacity="0.45"></ellipse>
+        <ellipse cx="13" cy="6" rx="4" ry="2.6" fill="var(--coral)" opacity="0.45"></ellipse>
+        <!-- nose + mouth -->
+        <ellipse cx="0" cy="4" rx="3" ry="2.2" fill="#171A2B"></ellipse>
+        <path d="M0,6.2 Q-4,11 -8,8 M0,6.2 Q4,11 8,8" stroke="#171A2B" stroke-width="1.4" fill="none" stroke-linecap="round"></path>
+      </g>
+      <text x="75" y="182" text-anchor="middle" font-size="11" fill="var(--lavender)" font-family="Manrope, sans-serif">DEN</text>
+
+      <!-- layover waypoint, Washington -->
+      <g transform="translate(400,88)">
+        <circle cx="0" cy="0" r="9" fill="none" stroke="var(--lavender)" stroke-width="1.3" opacity="0.7"></circle>
+        <circle cx="0" cy="0" r="3" fill="var(--lavender)" opacity="0.9"></circle>
+      </g>
+      <text x="400" y="70" text-anchor="middle" font-size="10" fill="var(--lavender)" font-family="Manrope, sans-serif">IAD · escala</text>
+
+      <!-- polar bear icon, Madrid -->
+      <g transform="translate(715,150)">
+        <!-- ears -->
+        <circle cx="-15" cy="-16" r="6.5" fill="var(--snow)"></circle>
+        <circle cx="15" cy="-16" r="6.5" fill="var(--snow)"></circle>
+        <circle cx="-15" cy="-16" r="3" fill="#E4D8CB" opacity="0.5"></circle>
+        <circle cx="15" cy="-16" r="3" fill="#E4D8CB" opacity="0.5"></circle>
+        <!-- face -->
+        <circle cx="0" cy="0" r="21" fill="var(--snow)"></circle>
+        <!-- eyes -->
+        <circle cx="-8" cy="-4" r="2.6" fill="#171A2B"></circle>
+        <circle cx="8" cy="-4" r="2.6" fill="#171A2B"></circle>
+        <circle cx="-7.3" cy="-4.8" r="0.9" fill="#FFFFFF"></circle>
+        <circle cx="8.7" cy="-4.8" r="0.9" fill="#FFFFFF"></circle>
+        <!-- blush -->
+        <ellipse cx="-13" cy="6" rx="4" ry="2.6" fill="var(--coral)" opacity="0.4"></ellipse>
+        <ellipse cx="13" cy="6" rx="4" ry="2.6" fill="var(--coral)" opacity="0.4"></ellipse>
+        <!-- snout + nose + mouth -->
+        <ellipse cx="0" cy="6" rx="7" ry="5.5" fill="#FFFFFF"></ellipse>
+        <ellipse cx="0" cy="3.5" rx="2.6" ry="2" fill="#171A2B"></ellipse>
+        <path d="M0,5.5 L0,8 M0,8 Q-3,10.5 -5.5,9 M0,8 Q3,10.5 5.5,9" stroke="#171A2B" stroke-width="1.2" fill="none" stroke-linecap="round"></path>
+      </g>
+      <text x="715" y="182" text-anchor="middle" font-size="11" fill="var(--lavender)" font-family="Manrope, sans-serif">MAD</text>
+
+      <!-- plane -->
+      <g id="plane" transform="translate(100,150)">
+        <path d="M-10,0 L10,0 M0,-6 L0,6 M6,-3 L10,0 L6,3" stroke="var(--coral)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+      </g>
+    </svg>
+
+    <div class="legs">
+      <div class="leg">
+        <span>Denver (DEN) → Washington (IAD) · <span class="flightno">UA 2853</span></span>
+        <strong>25 oct, 12:35 → 17:55</strong>
+      </div>
+      <div class="layover">escala de 1h 10m en Washington D.C.</div>
+      <div class="leg">
+        <span>Washington (IAD) → Madrid (MAD) · <span class="flightno">UA 260</span></span>
+        <strong>25 oct, 19:05 → 26 oct, 07:45</strong>
+      </div>
+    </div>
+
+    <div class="live-links">
+      <a href="https://www.flightradar24.com/data/flights/ua2853" target="_blank" rel="noopener">UA 2853 en FlightRadar24</a>
+      <a href="https://www.flightradar24.com/data/flights/ua260" target="_blank" rel="noopener">UA 260 en FlightRadar24</a>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Scheduled times, stored in UTC so the countdown and clocks are correct
+  // no matter where this page is viewed from.
+  // Depart Denver: 25 Oct 2026, 12:35 America/Denver (MDT, UTC-6) -> 18:35 UTC
+  // Arrive Madrid: 26 Oct 2026, 07:45 Europe/Madrid (CET, UTC+1)  -> 06:45 UTC
+  // Itinerary (UA 2853 DEN-IAD, escala, UA 260 IAD-MAD)
+  const DEPART_DEN_UTC = new Date("2026-10-25T18:35:00Z"); // 12:35 America/Denver
+  const ARRIVE_IAD_UTC = new Date("2026-10-25T21:55:00Z"); // 17:55 America/New_York
+  const DEPART_IAD_UTC = new Date("2026-10-25T23:05:00Z"); // 19:05 America/New_York
+  const ARRIVE_UTC     = new Date("2026-10-26T06:45:00Z"); // 07:45 Europe/Madrid
+
+  const DEPART_UTC = DEPART_DEN_UTC; // kept for the "on the ground / in the air" note below
+
+  const pad = n => String(n).padStart(2, "0");
+
+  function updateCountdown(){
+    const now = new Date();
+    const diff = ARRIVE_UTC - now;
+
+    const countdownEl = document.getElementById("countdown");
+    const arrivedEl = document.getElementById("arrivedMsg");
+    const labelEl = document.getElementById("countdownLabel");
+    const noteEl = document.getElementById("phaseNote");
+
+    if (diff <= 0){
+      countdownEl.style.display = "none";
+      arrivedEl.style.display = "block";
+      labelEl.style.display = "none";
+      noteEl.textContent = "";
+    } else {
+      countdownEl.style.display = "flex";
+      arrivedEl.style.display = "none";
+      labelEl.style.display = "block";
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      document.getElementById("dd").textContent = pad(days);
+      document.getElementById("hh").textContent = pad(hours);
+      document.getElementById("mm").textContent = pad(minutes);
+      document.getElementById("ss").textContent = pad(seconds);
+
+      if (now < DEPART_DEN_UTC){
+        noteEl.textContent = "todavía en tierra, esperando embarque en Denver";
+      } else if (now < ARRIVE_IAD_UTC){
+        noteEl.textContent = "en el aire, camino a Washington D.C. ✈️";
+      } else if (now < DEPART_IAD_UTC){
+        noteEl.textContent = "en escala en Washington D.C.";
+      } else {
+        noteEl.textContent = "en el aire, cruzando el Atlántico ✈️";
+      }
+    }
+
+    updatePlane(now);
+  }
+
+  function updatePlane(now){
+    const plane = document.getElementById("plane");
+    let path, progress;
+
+    if (now <= DEPART_DEN_UTC){
+      path = document.getElementById("leg1Path");
+      progress = 0;
+    } else if (now < ARRIVE_IAD_UTC){
+      path = document.getElementById("leg1Path");
+      progress = (now - DEPART_DEN_UTC) / (ARRIVE_IAD_UTC - DEPART_DEN_UTC);
+    } else if (now < DEPART_IAD_UTC){
+      path = document.getElementById("leg2Path");
+      progress = 0; // sitting at the IAD end while on the ground
+    } else if (now < ARRIVE_UTC){
+      path = document.getElementById("leg2Path");
+      progress = (now - DEPART_IAD_UTC) / (ARRIVE_UTC - DEPART_IAD_UTC);
+    } else {
+      path = document.getElementById("leg2Path");
+      progress = 1;
+    }
+
+    const len = path.getTotalLength();
+    const point = path.getPointAtLength(progress * len);
+    const aheadPoint = path.getPointAtLength(Math.min(progress * len + 1, len));
+    const angle = Math.atan2(aheadPoint.y - point.y, aheadPoint.x - point.x) * (180 / Math.PI);
+
+    plane.setAttribute("transform", `translate(${point.x},${point.y}) rotate(${angle})`);
+  }
+
+  function updateClocks(){
+    const now = new Date();
+
+    const denverFmt = new Intl.DateTimeFormat("es-ES", {
+      timeZone: "America/Denver", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+    });
+    const madridFmt = new Intl.DateTimeFormat("es-ES", {
+      timeZone: "Europe/Madrid", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+    });
+    const denverDateFmt = new Intl.DateTimeFormat("es-ES", {
+      timeZone: "America/Denver", weekday: "long", day: "numeric", month: "long"
+    });
+    const madridDateFmt = new Intl.DateTimeFormat("es-ES", {
+      timeZone: "Europe/Madrid", weekday: "long", day: "numeric", month: "long"
+    });
+
+    document.getElementById("clockDenver").textContent = denverFmt.format(now);
+    document.getElementById("clockMadrid").textContent = madridFmt.format(now);
+    document.getElementById("dateDenver").textContent = denverDateFmt.format(now);
+    document.getElementById("dateMadrid").textContent = madridDateFmt.format(now);
+  }
+
+  function tick(){
+    updateCountdown();
+    updateClocks();
+  }
+
+  tick();
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>
